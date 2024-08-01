@@ -1,6 +1,6 @@
 <?php
 
-require 'function.php';
+require 'ceklogin.php';
 
 // ketika user mengakses /view.php? maka akan langsung ke halaman index.php
 // agar akses view hanya dapat diakses ketika memiliki id
@@ -183,13 +183,13 @@ if(isset($_GET['idp'])){
                     $idproduk = $pl['idproduk'];
                 ?>
 
-                <option value="<?=$idproduk;?>"><?=$namaproduk;?> - <?=$deskripsi;?></option>
+                <option value="<?=$idproduk;?>"><?=$namaproduk;?> - <?=$deskripsi;?> (Stock: <?=$stock?>)</option>
 
                 <?php 
                     }  
                 ?>
              </select>
-             <input type="number" name="qty" class="form-control mt-4" placeholder="Jumlah">
+             <input type="number" name="qty" class="form-control mt-4" placeholder="Jumlah" min="1" required>
              <input type="hidden" name="idp" value="<?=$idp?>">
         </div>
       

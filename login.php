@@ -1,5 +1,13 @@
 <?php 
 require 'function.php';
+
+// kalau sudah login, tidak bisa mengakses login.php
+if (!isset($_SESSION['login'])){
+    // LOGIN
+} else
+    //Sudah Login
+    header('location:index.php');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

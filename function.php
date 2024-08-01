@@ -93,22 +93,43 @@ if(isset($_POST['tambahpesanan'])){
     }
 }
 
+//produk dipilih dipesanan
 if(isset($_POST['addproduk'])){
     $idproduk = $_POST['idproduk'];
-    $idp = $_POST['idp'];
-    $qty = $_POST['qty']; //jumlah atau total
+    $idp = $_POST['idp']; //idpesanan
+    $qty = $_POST['qty']; //jumlah atau total yang mau dikeluarin
 
-    $insert = mysqli_query($conn, " INSERT INTO detailpesanan (idpesanan, idproduk, qty) VALUES ('$idp', '$idproduk', '$qty') ");
+    //hitung stock sekarang ada berapa
+    $hitung1 = mysqli_query($conn, "SELECT * FROM produk WHERE idproduk='$idproduk'");
+    $hitung2 = mysqli_fetch_array($hitung1);
+    $stocksekarang = $hitung2['stock']; //stock barang saat ini
 
-    if($insert){
-        header('location:view.php?idp='.$idp) ;
-    } else {
+    if($stocksekarang>=$qty){
+
+        //kurangi stok dengan jumlah yang dikeluarkan
+        $selisih = $stocksekarang-$qty;
+
+        //stocknya cukup
+        $insert = mysqli_query($conn, " INSERT INTO detailpesanan (idpesanan, idproduk, qty) VALUES ('$idp', '$idproduk', '$qty') ");
+        $update = mysqli_query($conn, "UPDATE produk SET stock='$selisih' WHERE idproduk='$idproduk'");
+
+        if($insert&&$update){
+            header('location:view.php?idp='.$idp) ;
+        } else {
+            echo '
+            <script>
+                alert("Gagal menambah pesanan baru");
+                window.location.href="view.php?idp='.$idp.'"
+            </script>
+            ';
+        }
+    } else{
+        //stock ga cukup
         echo '
         <script>
-            alert("Gagal menambah pesanan baru");
-            window.location.href="view.php?idp="'.$idp.'
-        </script>
-        ';
+            alert("Stock barang tidak cukup untuk saat ini!");
+            window.location.href="view.php?idp='.$idp.'"
+        </script>';
     }
 }
 
