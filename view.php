@@ -1,3 +1,21 @@
+<?php
+
+require 'function.php';
+
+// ketika user mengakses /view.php? maka akan langsung ke halaman index.php
+// agar akses view hanya dapat diakses ketika memiliki id
+if(isset($_GET['idp'])){
+    $idp = $_GET['idp'];
+
+    $ambilnamapelanggan = mysqli_query($conn, "SELECT * FROM pesanan p, pelanggan pl WHERE p.idpelanggan=pl.idpelanggan AND p.idpesanan='$idp'");
+    $np = mysqli_fetch_array($ambilnamapelanggan);
+    $namapel = $np['namapelanggan'];
+} else{
+    header('location:index.php');
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -55,21 +73,17 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Data Pesanan</h1>
+                        <h1 class="mt-4">Data Pesanan: <?=$idp?></h1>
+                        <h4 class="mt-4">Nama Pelanggan: <?=$namapel?></h4>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Selamat Datang di Kasir Sederhana</li>
                         </ol>
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Primary Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                        <!-- Button to Open the Modal -->
+                        <button type="button" class="btn btn-info mb-4" data-bs-toggle="modal" data-bs-target="#myModal">
+                        Tambah Barang 
+                        </button>
+
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
@@ -79,23 +93,41 @@
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>No</th>
+                                            <th>Nama Produk</th>
+                                            <th>Harga Satuan</th>
+                                            <th>Jumlah</th>
+                                            <th>Total Harga</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
+                                    <?php 
+                                    $get = mysqli_query($conn,"SELECT * FROM detailpesanan p, produk pr where p.idproduk=pr.idproduk AND idpesanan='$idp'");
+                                    $i = 1;
+
+                                    while($p=mysqli_fetch_array($get)){
+                                    $qty = $p['qty'];
+                                    $namaproduk = $p['namaproduk'];
+                                    $harga = $p['harga'];
+                                    $totalharga = $qty*$harga;
+
+                                    ?>
+
                                         <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
+                                            <td><?=$i++?></td>
+                                            <td><?=$namaproduk?></td>
+                                            <td>Rp. <?=number_format($harga)?></td>
+                                            <td><?=number_format($qty)?></td>
+                                            <td>Rp. <?=number_format($totalharga)?></td>
+                                            <td>Edit Delete</td>
                                         </tr>
+
+                                    <?php 
+                                    }; //end off while 
+                                    ?>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -124,4 +156,53 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
     </body>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Tambah Barang</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+    <form method="post">
+    
+        <!-- Modal body -->
+        <div class="modal-body">
+            Pilih Barang
+             <select name="idproduk" class="form-control">
+                <?php 
+                    $getproduk = mysqli_query($conn, "SELECT * FROM produk WHERE idproduk NOT IN (SELECT idproduk FROM detailpesanan WHERE idpesanan='$idp')");
+                    while($pl=mysqli_fetch_array($getproduk)){
+                    $namaproduk = $pl['namaproduk'];
+                    $stock = $pl['stock'];
+                    $deskripsi = $pl['deskripsi'];
+                    $idproduk = $pl['idproduk'];
+                ?>
+
+                <option value="<?=$idproduk;?>"><?=$namaproduk;?> - <?=$deskripsi;?></option>
+
+                <?php 
+                    }  
+                ?>
+             </select>
+             <input type="number" name="qty" class="form-control mt-4" placeholder="Jumlah">
+             <input type="hidden" name="idp" value="<?=$idp?>">
+        </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+          <button type="submit" class="btn btn-success" name="addproduk">Submit</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+
+    </form>
+
+    </div>
+  </div>
+</div>
+
 </html>

@@ -1,3 +1,9 @@
+<?php
+
+require 'function.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -37,6 +43,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Barang Masuk
                             </a>
+                            <a class="nav-link" href="pelanggan.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Kelola Pelanggan
+                            </a>
                             <a class="nav-link" href="logout.php">
                                 Logout
                             </a>
@@ -66,6 +76,12 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Button to Open the Modal -->
+                        <button type="button" class="btn btn-info mb-4" data-bs-toggle="modal" data-bs-target="#myModal">
+                        Tambah Pesanan Baru
+                        </button>
+
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
@@ -75,23 +91,41 @@
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>ID Pesanan</th>
+                                            <th>Tanggal</th>
+                                            <th>Nama Pelanggan</th>
+                                            <th>Jumlah</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
+                                    <?php 
+                                    $get = mysqli_query($conn,"SELECT * FROM pesanan p, pelanggan pl where p.idpelanggan=pl.idpelanggan");
+
+                                    while($p=mysqli_fetch_array($get)){
+                                    $idpesanan = $p['idpesanan'];
+                                    $tanggal = $p['tanggal'];
+                                    $namapelanggan = $p['namapelanggan'];
+                                    $alamat = $p['alamat'];
+
+                                    // hitung jumlah
+                                    $hitungjumlah = mysqli_query($conn, "SELECT * FROM detailpesanan WHERE idpesanan='$idpesanan'");
+                                    $jumlah = mysqli_num_rows($hitungjumlah);
+                                    ?>
+
                                         <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
+                                            <td><?=$idpesanan?></td>
+                                            <td><?=$tanggal?></td>
+                                            <td><?=$namapelanggan?> - <?=$alamat?></td>
+                                            <td><?=$jumlah?></td>
+                                            <td><a href="view.php?idp=<?=$idpesanan?>" class="btn btn-primary" target="blank">Tampilkan</a> Delete</td>
                                         </tr>
+
+                                    <?php 
+                                    }; //end oTampilkanff wle 
+                                    ?>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -120,4 +154,50 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
     </body>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Tambah Pesanan Baru</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+    <form method="post">
+    
+        <!-- Modal body -->
+        <div class="modal-body">
+            Pilih Pelanggan
+             <select name="idpelanggan" class="form-control">
+                <?php 
+                    $getpelanggan = mysqli_query($conn, 'SELECT * FROM pelanggan');
+                    while($pl=mysqli_fetch_array($getpelanggan)){
+                    $namapelanggan = $pl['namapelanggan'];
+                    $idpelanggan = $pl['idpelanggan'];
+                    $alamat = $pl['alamat'];
+                ?>
+
+                <option value="<?=$idpelanggan;?>"><?=$namapelanggan;?> - <?=$alamat;?></option>
+
+                <?php 
+                    }  
+                ?>
+             </select>
+        </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+          <button type="submit" class="btn btn-success" name="tambahpesanan">Submit</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+
+    </form>
+
+    </div>
+  </div>
+</div>
+
 </html>

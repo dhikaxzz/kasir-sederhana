@@ -1,3 +1,7 @@
+<?php
+    require 'function.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -6,7 +10,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Data Pesanan</title>
+        <title>Kasir Sederhana</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -55,47 +59,60 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Data Pesanan</h1>
+                        <h1 class="mt-4">Data Pelanggan</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Selamat Datang di Kasir Sederhana</li>
                         </ol>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Primary Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
+                                    <div class="card-body">Jumlah Pelanggan : </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Button to Open the Modal -->
+                        <button type="button" class="btn btn-info mb-4" data-bs-toggle="modal" data-bs-target="#myModal">
+                        Tambah Pelanggan
+                        </button>
+
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Data Pesanan
+                                Data Pelanggan
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
-                                    <thead>
+                                <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>No</th>
+                                            <th>Nama Pelanggan</th>
+                                            <th>No Hp</th>
+                                            <th>Alamat</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+
+                                    <?php 
+                                    $get = mysqli_query($conn,"SELECT * FROM pelanggan");
+                                    $i = 1;
+
+                                    while($p=mysqli_fetch_array($get)){
+                                    $namapelanggan = $p['namapelanggan'];
+                                    $nohp = $p['nohp'];
+                                    $alamat = $p['alamat'];
+                                    ?>
                                         <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
+                                            <td><?=$i++?></td>
+                                            <td><?=$namapelanggan?></td>
+                                            <td><?=$nohp?></td>
+                                            <td><?=$alamat?></td>
+                                            <td>Edit Delete</td>
                                         </tr>
+                                    <?php 
+                                    }; //end off while 
+                                    ?>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -124,4 +141,37 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
     </body>
+
+    <!-- The Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Tambah Data Pelanggan</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+    <form method="post">
+    
+        <!-- Modal body -->
+        <div class="modal-body">
+        <input type="text" name="namapelanggan" class="form-control mt-3" placeholder="Nama Pelanggan">
+        <input type="text" name="nohp" class="form-control mt-3" placeholder="Nomor Hp">
+        <input type="num" name="alamat" class="form-control mt-3" placeholder="Alamat">
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+          <button type="submit" class="btn btn-success" name="tambahpelanggan">Submit</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+
+    </form>
+
+    </div>
+  </div>
+</div>
+
 </html>

@@ -4,9 +4,6 @@ session_start();
 
 //Koneksi
 $conn = mysqli_connect('localhost', 'root', '', 'kasir');
- if($conn){
-    echo 'berhasil';
- }
 
 //Login
 if(isset($_POST['login'])){
@@ -55,8 +52,64 @@ if(isset($_POST['tambahbarang'])){
         </script>
         ';
     }
-
 }
 
+
+// Tambah Pelanggan
+if(isset($_POST['tambahpelanggan'])){
+    $namapelanggan = $_POST['namapelanggan'];
+    $nohp = $_POST['nohp'];
+    $alamat = $_POST['alamat'];
+
+    $insert = mysqli_query($conn, " INSERT INTO pelanggan VALUES ('NULL', '$namapelanggan', '$nohp', '$alamat') ");
+
+    if($insert){
+        header('location:pelanggan.php') ;
+    } else {
+        echo '
+        <script>
+            alert("Gagal menambah pelanggan baru");
+            window.location.href="pelanggan.php"
+        </script>
+        ';
+    }
+}
+
+// tambah pesanan
+if(isset($_POST['tambahpesanan'])){
+    $idpelanggan = $_POST['idpelanggan'];
+
+    $insert = mysqli_query($conn, " INSERT INTO pesanan (idpelanggan) VALUES ('$idpelanggan') ");
+
+    if($insert){
+        header('location:index.php') ;
+    } else {
+        echo '
+        <script>
+            alert("Gagal menambah pesanan baru");
+            window.location.href="index.php"
+        </script>
+        ';
+    }
+}
+
+if(isset($_POST['addproduk'])){
+    $idproduk = $_POST['idproduk'];
+    $idp = $_POST['idp'];
+    $qty = $_POST['qty']; //jumlah atau total
+
+    $insert = mysqli_query($conn, " INSERT INTO detailpesanan (idpesanan, idproduk, qty) VALUES ('$idp', '$idproduk', '$qty') ");
+
+    if($insert){
+        header('location:view.php?idp='.$idp) ;
+    } else {
+        echo '
+        <script>
+            alert("Gagal menambah pesanan baru");
+            window.location.href="view.php?idp="'.$idp.'
+        </script>
+        ';
+    }
+}
 
 ?>
