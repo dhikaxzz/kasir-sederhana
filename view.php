@@ -108,8 +108,11 @@ if(isset($_GET['idp'])){
                                     $i = 1;
 
                                     while($p=mysqli_fetch_array($get)){
+                                    $idproduk = $p['idproduk'];
+                                    $iddetailpesanan = $p['iddetailpesanan'];
                                     $qty = $p['qty'];
                                     $namaproduk = $p['namaproduk'];
+                                    $deskripsi = $p['deskripsi'];
                                     $harga = $p['harga'];
                                     $totalharga = $qty*$harga;
 
@@ -117,12 +120,47 @@ if(isset($_GET['idp'])){
 
                                         <tr>
                                             <td><?=$i++?></td>
-                                            <td><?=$namaproduk?></td>
+                                            <td><?=$namaproduk?> (<?=$deskripsi?>)</td>
                                             <td>Rp. <?=number_format($harga)?></td>
                                             <td><?=number_format($qty)?></td>
                                             <td>Rp. <?=number_format($totalharga)?></td>
-                                            <td>Edit Delete</td>
+                                            <td>Edit  
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete<?=$idproduk?>">Hapus 
+                                            </button>
+                                        </td>
                                         </tr>
+                                        
+                                           <div class="modal" id="delete<?=$idproduk?>">
+                                                <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Apakah anda yakin menghapus barang ini?</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <form method="post">
+                                                
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                    Apakah anda yakin menghapus barang ini?
+                                                        <input type="hidden" name="idp" value="<?=$iddetailpesanan?>">
+                                                        <input type="hidden" name="idproduk" value="<?=$idproduk?>">
+                                                        <input type="hidden" name="idpesanan" value="<?=$idpesanan?>">
+                                                    </div>
+                                                
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success" name="hapusprodukpesanan">Ya</button>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+
+                                                </form>
+
+                                                </div>
+                                                </div>
+                                            </div>
 
                                     <?php 
                                     }; //end off while 

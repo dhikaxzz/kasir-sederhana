@@ -133,4 +133,56 @@ if(isset($_POST['addproduk'])){
     }
 }
 
+
+//menambah barang masuk
+if (isset($_POST['barangmasuk'])){
+    $idproduk = $_POST['idproduk'];
+    $qty = $_POST['qty'];
+
+    $insertb = mysqli_query($conn, "INSERT INTO masuk (idproduk, qty) VALUES ('$idproduk','$qty')");
+
+    if($insertb){
+        header('location:masuk.php');
+    } else {
+        echo '
+        <script>alert("Gagal");
+        window.location.href="masuk.php"
+        </script> 
+        ';
+    }
+}
+
+// hapus produk pesanan
+if(isset($_POST['hapusprodukpesanan'])){
+    $idp = $_POST['idp'];   //id detail pesanan
+    $idproduk = $_POST['idproduk'];
+    $idpesanan = $_POST['idpesanan'];
+
+    //cek jumlah sekarang
+    $cek1 = mysqli_query($conn, "SELECT * FROM detailpesanan WHERE iddetailpesanan='$idp'");
+    $cek2 = mysqli_fetch_array($cek1);
+    $qtysekarang = $cek2['qty'];
+
+    // cek stok sekarang
+    $cek3 = mysqli_query($conn, "SELECT * FROM produk WHERE idproduk='$idproduk'");
+    $cek4 = mysqli_fetch_array($cek3);
+    $stocksekarang = $cek4['stock'];
+    
+    $hitung = $stocksekarang+$qtysekarang;
+
+    $update = mysqli_query($conn, "UPDATE produk SET stock='$hitung' WHERE idproduk='$idproduk'"); //update stock
+    $hapus = mysqli_query($conn, "DELETE FROM detailpesanan WHERE idproduk='$idproduk' AND iddetailpesanan='$idp'");
+
+    if($update&&$hapus){
+        header('location:view.php?idp='.$idpesanan);
+
+    } else{
+        echo '
+        <script>alert("Gagal menghapus barang");
+        window.location.href="view.php?id='.$idpesanan.'"
+        </script> 
+        ';
+    }
+}
+
 ?>
