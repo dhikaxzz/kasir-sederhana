@@ -185,4 +185,86 @@ if(isset($_POST['hapusprodukpesanan'])){
     }
 }
 
+//edit barang
+    if(isset($_POST['editbarang'])){
+        $np = $_POST['namaproduk'];
+        $desc = $_POST['deskripsi'];
+        $harga = $_POST['harga'];
+        $idp = $_POST['idp']; //idproduk
+
+        $query = mysqli_query($conn, "UPDATE produk SET namaproduk='$np', deskripsi='$desc', harga='$harga' WHERE idproduk='$idp' ");
+
+        if($query){
+            header('location:stock.php');
+        } else {
+            echo '
+            <script>alert("Gagal");
+            window.location.href="stock.php"
+            </script> 
+            ';
+
+        }
+
+    }
+
+//hapus barang
+if(isset($_POST['hapusbarang'])){
+    $idp = $_POST['idp']; //idproduk
+
+    $query = mysqli_query($conn, "DELETE FROM produk WHERE idproduk='$idp'");
+
+    if($query){
+        header('location:stock.php');
+    } else {
+        echo '
+        <script>alert("Gagal");
+        window.location.href="stock.php"
+        </script> 
+        ';
+
+    }
+
+}
+
+//edit pelanggan
+if(isset($_POST['editpelanggan'])){
+    $np = $_POST['namapelanggan'];
+    $nohp = $_POST['nohp'];
+    $a = $_POST['alamat'];
+    $id = $_POST['idpl'];
+
+    $query = mysqli_query($conn, "UPDATE pelanggan SET namapelanggan='$np', nohp='$nohp', alamat='$a' WHERE idpelanggan='$id' ");
+
+    if($query){
+        header('location:pelanggan.php');
+    } else {
+        echo '
+        <script>alert("Gagal");
+        window.location.href="pelanggan.php"
+        </script> 
+        ';
+
+    }
+
+}
+
+//hapus pelanggan
+if(isset($_POST['hapuspelanggan'])){
+    $idpl = $_POST['idpl'];
+
+    $query = mysqli_query($conn, "DELETE FROM pelanggan WHERE idpelanggan='$idpl'");
+
+    if($query){
+        header('location:pelanggan.php');
+    } else {
+        echo '
+        <script>alert("Gagal");
+        window.location.href="pelanggan.php"
+        </script> 
+        ';
+
+    }
+
+}
+
 ?>

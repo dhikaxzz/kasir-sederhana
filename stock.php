@@ -106,15 +106,82 @@ $h2 = mysqli_num_rows($h1); //jumlah produk
                                     $deskripsi = $p['deskripsi'];
                                     $harga = $p['harga'];
                                     $stock = $p['stock'];
+                                    $idproduk = $p['idproduk'];
+
                                     ?>
                                         <tr>
                                             <td><?=$i++?></td>
                                             <td><?=$namaproduk?></td>
                                             <td><?=$deskripsi?></td>
                                             <td><?=$stock?></td>
-                                            <td><?=$harga?></td>
-                                            <td>Edit Delete</td>
+                                            <td>Rp. <?=number_format($harga)?></td>
+                                            <td> 
+                                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?=$idproduk?>">Edit</button> 
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete<?=$idproduk?>">Delete</button>
+                                            </td>
                                         </tr>
+                                        <!-- Modal edit -->
+                    <div class="modal" id="edit<?=$idproduk?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Ubah <?=$namaproduk?> </h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form method="post">
+                            
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                <input type="text" name="namaproduk" class="form-control mt-3" placeholder="Nama Produk" value="<?=$namaproduk?>">
+                                <input type="text" name="deskripsi" class="form-control mt-3" placeholder="Deskripsi" value="<?=$deskripsi?>">
+                                <input type="num" name="harga" class="form-control mt-3" placeholder="Harga Produk" value="<?=$harga?>">
+                                <input type="hidden" name="idp" value="<?=$idproduk?>">
+                            </div>
+                            
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success" name="editbarang">Submit</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+
+                            </form>
+
+                            </div>
+                        </div>
+                        </div>
+                                        <!-- Modal delete -->
+                        <div class="modal" id="delete<?=$idproduk?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Hapus <?=$namaproduk?></h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form method="post">
+                            
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                Apakah anda yakin ingin menghapus barang ini?
+                                <input type="hidden" name="idp" value="<?=$idproduk?>">
+                            </div>
+                            
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success" name="hapusbarang">Submit</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+
+                            </form>
+
+                            </div>
+                        </div>
+                        </div>
                                     <?php 
                                     }; //end off while 
                                     ?>
