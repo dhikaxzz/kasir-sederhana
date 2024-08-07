@@ -5,33 +5,71 @@ session_start();
 //Koneksi
 $conn = mysqli_connect('localhost', 'root', '', 'kasir');
 
-//Login
-if(isset($_POST['login'])){
-    //inisiate variabel
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+//registrasi
+function registrasi($data) {
+	global $conn;
 
-    $check = mysqli_query($conn, "SELECT * FROM user WHERE username='$username' and password='$password' ");
-    $hitung = mysqli_num_rows($check);
+	$username = strtolower(stripslashes($data["username"]));
+	$password = mysqli_real_escape_string($conn, $data["password"]);
+	$password2 = mysqli_real_escape_string($conn, $data["password2"]);
 
-    if($hitung>0){
-        //jika datanya ditemukan
-        //berhasil login
+	// cek username sudah ada atau belum
+	$result = mysqli_query($conn, "SELECT username FROM user WHERE username = '$username'");
 
-        $_SESSION['login'] = 'True';
-        header('location:index.php');
-    } else {
-        //data tidak ditemukan
-        //gagal login 
-        echo '
-        <script>
-            alert("Username atau Password salah");
-            window.location.href="login.php"
-        </script>
-        ';
-    }
+	if( mysqli_fetch_assoc($result) ) {
+		echo "<script>
+				alert('username sudah terdaftar!')
+		      </script>";
+		return false;
+	}
 
+
+	// cek konfirmasi password
+	if( $password !== $password2 ) {
+		echo "<script>
+				alert('konfirmasi password tidak sesuai!');
+		      </script>";
+		return false;
+	}
+
+	// enkripsi password
+	$password = password_hash($password, PASSWORD_DEFAULT);
+
+	// tambahkan userbaru ke database
+	mysqli_query($conn, "INSERT INTO user VALUES('NULL', '$username', '$password')");
+
+	return mysqli_affected_rows($conn);
 }
+
+//Login
+// if(isset($_POST['login'])){
+//     //inisiate variabel
+//     $username = $_POST['username'];
+//     $password = $_POST['password'];
+
+//     $check = mysqli_query($conn, "SELECT * FROM user WHERE username='$username' and password='$password' ");
+//     $hitung = mysqli_num_rows($check);
+
+//     if($hitung>0){
+//         //jika datanya ditemukan
+//         //berhasil login
+
+//         $_SESSION['login'] = 'True';
+//         header('location:index.php');
+//     } else {
+//         //data tidak ditemukan
+//         //gagal login 
+//         echo '
+//         <script>
+//             alert("Username atau Password salah");
+//             window.location.href="login.php"
+//         </script>
+//         ';
+//     }
+
+// }
+
+
 
 // Tambah Barang
 if(isset($_POST['tambahbarang'])){
@@ -266,5 +304,65 @@ if(isset($_POST['hapuspelanggan'])){
     }
 
 }
+
+
+//mengubah data barang masuk
+if(isset($_POST['editdatabarangmasuk'])){
+    $qty = $_POST['qty'];
+    $idm = $_POST['idm']; //id masuk
+    $idp = $_POST['idp']; //id produk
+
+    //mencari tau qty sekarang
+    $caritahu = mysqli_query($conn, "SELECT * FROM masuk WHERE idmasuk='$idm' ");
+    $caritahu2 = mysqli_fetch_array($caritahu);
+    $qtysekarang = $caritahu2['qty'];
+
+    //cari tau stock sekarang berapa
+    $caristock = mysqli_query($conn, "SELECT * FROM produk WHERE idproduk='$idp'");
+    $caristock2 = mysqli_fetch_array($caristock);
+    $stocksekarang = $caristock2['stock'];
+
+    if($qty >= $qtysekarang){
+        //kalau input user lebih besar daripada qty yg tercatat sekarang
+        //hitung selisih
+        $selisih = $qty-$qtysekarang;
+        $newstock = $stocksekarang+$selisih;
+
+        $query1 = mysqli_query($conn, "UPDATE masuk SET qty='$qty' WHERE idmasuk='$idm' ");
+        $query2 = mysqli_query($conn, "UPDATE produk SET stock='$newstock' WHERE idproduk='$idp' ");
+        if($query1&&$query2){
+            header('location:masuk.php');
+        } else {
+            echo '
+            <script>alert("Gagal");
+            window.location.href="masuk.php"
+            </script> 
+            ';
+        }
+
+    } else{
+        //kalau lebih kecil
+        //hitung selisih
+        $selisih = $qtysekarang-$qty;
+        $newstock = $stocksekarang-$selisih;
+
+        $query1 = mysqli_query($conn, "UPDATE masuk SET qty='$qty' WHERE idmasuk='$idm' ");
+        $query2 = mysqli_query($conn, "UPDATE produk SET stock='$newstock' WHERE idproduk='$idp' ");
+        if($query1&&$query2){
+            header('location:masuk.php');
+        } else {
+            echo '
+            <script>alert("Gagal");
+            window.location.href="masuk.php"
+            </script> 
+            ';
+        }
+    }
+
+  
+
+}
+
+
 
 ?>

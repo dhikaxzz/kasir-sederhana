@@ -27,27 +27,29 @@
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
-                        <div class="nav">
+                    <div class="nav">
                             <div class="sb-sidenav-menu-heading">Menu</div>
-                            <a class="nav-link" href="index.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Order
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3" href="index.php">
+                            <div   div class="sb-nav-link-icon me-2"><i class="fas fa-tachometer-alt"></i></div>
+                            Order
                             </a>
-                            <a class="nav-link" href="stock.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3" href="stock.php">
+                                <div class="sb-nav-link-icon me-2"><i class="fas fa-box"></i></div>
                                 Stok Barang
                             </a>
-                            <a class="nav-link" href="masuk.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3" href="masuk.php">
+                                <div class="sb-nav-link-icon me-2"><i class="fas fa-inbox"></i></div>
                                 Barang Masuk
                             </a>
-                            <a class="nav-link" href="pelanggan.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3" href="pelanggan.php">
+                                <div class="sb-nav-link-icon me-2"><i class="fas fa-users"></i></div>
                                 Kelola Pelanggan
                             </a>
-                            <a class="nav-link" href="logout.php">
-                                Logout
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3 bg-danger text-white" href="logout.php">
+                            <div class="sb-nav-link-icon me-2"><i class="fas fa-sign-out-alt"></i></div>
+                            Logout
                             </a>
+
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -80,7 +82,6 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Produk</th>
-                                            <th>Deskripsi</th>
                                             <th>Jumlah</th>
                                             <th>Tanggal</th>
                                             <th>Aksi</th>
@@ -93,19 +94,86 @@
                                     $i = 1;
 
                                     while($p=mysqli_fetch_array($get)){
+                                    $idmasuk = $p['idmasuk'];
                                     $namaproduk = $p['namaproduk'];
                                     $deskripsi = $p['deskripsi'];
                                     $qty = $p['qty'];
                                     $tanggal = $p['tanggal'];
+                                    $idproduk = $p['idproduk']
                                     ?>
                                         <tr>
                                             <td><?=$i++?></td>
-                                            <td><?=$namaproduk?></td>
-                                            <td><?=$deskripsi?></td>
+                                            <td><?=$namaproduk?>: <?=$deskripsi?></td>
                                             <td><?=$qty?></td>
                                             <td><?=$tanggal?></td>
-                                            <td>Edit Delete</td>
+                                            <td> 
+                                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?=$idmasuk?>">Edit</button> 
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete<?=$idmasuk?>">Delete</button>
+                                            </td>
                                         </tr>
+
+                        <!-- Modal edit -->
+                    <div class="modal" id="edit<?=$idmasuk?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Ubah Data Barang Masuk</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form method="post">
+                            
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                <input type="text" name="namaproduk" class="form-control mt-3" placeholder="Nama Produk" value="<?=$namaproduk?>: <?=$deskripsi?>" disabled>
+                                <input type="number" name="qty" class="form-control mt-3" placeholder="Harga Produk" value="<?=$qty?>">
+                                <input type="hidden" name="idm" value="<?=$idmasuk?>">
+                                <input type="hidden" name="idp" value="<?=$idproduk?>">
+                            </div>
+                            
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success" name="editdatabarangmasuk">Submit</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+
+                            </form>
+
+                            </div>
+                        </div>
+                        </div>
+                                        <!-- Modal delete -->
+                        <div class="modal" id="delete<?=$idmasuk?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Hapus <?=$namaproduk?></h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form method="post">
+                            
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                Apakah anda yakin ingin menghapus barang ini?
+                                <input type="hidden" name="idp" value="<?=$idproduk?>">
+                            </div>
+                            
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success" name="hapusbarang">Submit</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+
+                            </form>
+
+                            </div>
+                        </div>
+                        </div>
                                     <?php 
                                     }; //end off while 
                                     ?>
@@ -165,7 +233,7 @@
                     $idproduk = $pl['idproduk'];
                 ?>
 
-                <option value="<?=$idproduk;?>"><?=$namaproduk;?> - <?=$deskripsi;?> (Stock: <?=$stock?>)</option>
+                <option value="<?=$idproduk;?>"><?=$namaproduk;?> - <?=$deskripsi;?> (Stock : <?=$stock?>)</option>
 
                 <?php 
                     }  

@@ -30,27 +30,29 @@
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
-                        <div class="nav">
+                    <div class="nav">
                             <div class="sb-sidenav-menu-heading">Menu</div>
-                            <a class="nav-link" href="index.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Order
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3" href="index.php">
+                            <div   div class="sb-nav-link-icon me-2"><i class="fas fa-tachometer-alt"></i></div>
+                            Order
                             </a>
-                            <a class="nav-link" href="stock.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3" href="stock.php">
+                                <div class="sb-nav-link-icon me-2"><i class="fas fa-box"></i></div>
                                 Stok Barang
                             </a>
-                            <a class="nav-link" href="masuk.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3" href="masuk.php">
+                                <div class="sb-nav-link-icon me-2"><i class="fas fa-inbox"></i></div>
                                 Barang Masuk
                             </a>
-                            <a class="nav-link" href="pelanggan.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3" href="pelanggan.php">
+                                <div class="sb-nav-link-icon me-2"><i class="fas fa-users"></i></div>
                                 Kelola Pelanggan
                             </a>
-                            <a class="nav-link" href="logout.php">
-                                Logout
+                            <a class="nav-link d-flex align-items-center mb-2 py-2 px-3 bg-danger text-white" href="logout.php">
+                            <div class="sb-nav-link-icon me-2"><i class="fas fa-sign-out-alt"></i></div>
+                            Logout
                             </a>
+
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
