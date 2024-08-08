@@ -160,12 +160,13 @@
                                 <!-- Modal body -->
                                 <div class="modal-body">
                                 Apakah anda yakin ingin menghapus barang ini?
+                                <input type="hidden" name="idm" value="<?=$idmasuk?>">
                                 <input type="hidden" name="idp" value="<?=$idproduk?>">
                             </div>
                             
                             <!-- Modal footer -->
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success" name="hapusbarang">Submit</button>
+                                <button type="submit" class="btn btn-success" name="hapusdatabarangmasuk">Submit</button>
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                                 </div>
 

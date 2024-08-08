@@ -76,13 +76,11 @@ if (isset($_POST["login"])) {
         <form class="pt-3" method="post">
             <div class="form-group py-2">
                 <div class="input-field" style="border-radius: 5px; padding: 5px; display: flex; align-items: center; cursor: pointer; border: 1px solid #400485; color: #400485;">
-                    <span class="far fa-user p-2" style="position: absolute; z-index: 2; left: 1rem; top: 50%; transform: translateY(-50%); color: #aaa;"></span>
                     <input type="text" placeholder="Enter your Username" id="inputEmail" name="username" required style="border: none; outline: none; box-shadow: none; width: 100%; padding: 0px 2px; font-family: 'Poppins', sans-serif; " autofocus/>
                 </div>
             </div>
             <div class="form-group py-1 pb-2">
                 <div class="input-field" style="border-radius: 5px; padding: 5px; display: flex; align-items: center; cursor: pointer; border: 1px solid #400485; color: #400485;">
-                    <span class="fas fa-lock p-2" style="position: absolute; z-index: 2; left: 1rem; top: 50%; transform: translateY(-50%); color: #aaa;"></span>
                     <input type="password" placeholder="Enter your Password" id="inputPassword" name="password" required style="border: none; outline: none; box-shadow: none; width: 100%; padding: 0px 2px; font-family: 'Poppins', sans-serif;" />
                 </div>
             </div>

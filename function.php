@@ -177,9 +177,19 @@ if (isset($_POST['barangmasuk'])){
     $idproduk = $_POST['idproduk'];
     $qty = $_POST['qty'];
 
-    $insertb = mysqli_query($conn, "INSERT INTO masuk (idproduk, qty) VALUES ('$idproduk','$qty')");
+     //cari tau stock sekarang berapa
+     $caristock = mysqli_query($conn, "SELECT * FROM produk WHERE idproduk='$idproduk'");
+     $caristock2 = mysqli_fetch_array($caristock);
+     $stocksekarang = $caristock2['stock'];
 
-    if($insertb){
+     // hitung
+     $newstock = $stocksekarang+$qty;
+
+
+    $insertb = mysqli_query($conn, "INSERT INTO masuk (idproduk, qty) VALUES ('$idproduk','$qty')");
+    $updatetb = mysqli_query($conn, "UPDATE produk SET stock='$newstock' WHERE idproduk='$idproduk'");
+
+    if($insertb&&$updatetb){
         header('location:masuk.php');
     } else {
         echo '
@@ -358,11 +368,53 @@ if(isset($_POST['editdatabarangmasuk'])){
             ';
         }
     }
-
-  
-
 }
 
+//hapus pelanggan
+if(isset($_POST['hapusdatabarangmasuk'])){
+    $idm = $_POST['idm'];
+    $idp = $_POST['idp'];
+
+    //mencari tau qty sekarang
+    $caritahu = mysqli_query($conn, "SELECT * FROM masuk WHERE idmasuk='$idm' ");
+    $caritahu2 = mysqli_fetch_array($caritahu);
+    $qtysekarang = $caritahu2['qty'];
+
+    //cari tau stock sekarang berapa
+    $caristock = mysqli_query($conn, "SELECT * FROM produk WHERE idproduk='$idp'");
+    $caristock2 = mysqli_fetch_array($caristock);
+    $stocksekarang = $caristock2['stock'];
+
+        //kalau lebih kecil
+        //hitung selisih
+        $newstock = $stocksekarang-$qtysekarang;
+
+        $query1 = mysqli_query($conn, "DELETE FROM masuk WHERE idmasuk='$idm'");
+        $query2 = mysqli_query($conn, "UPDATE produk SET stock='$newstock' WHERE idproduk='$idp'");
+        if($query1&&$query2){
+            header('location:masuk.php');
+        } else {
+            echo '
+            <script>alert("Gagal");
+            window.location.href="masuk.php"
+            </script> 
+            ';
+        }    
+
+
+    // // $query = mysqli_query($conn, "DELETE FROM pelanggan WHERE idpelanggan='$idpl'");
+
+    // // if($query){
+    // //     header('location:pelanggan.php');
+    // // } else {
+    // //     echo '
+    // //     <script>alert("Gagal");
+    // //     window.location.href="pelanggan.php"
+    // //     </script> 
+    // //     ';
+
+    // }
+}
 
 
 ?>
